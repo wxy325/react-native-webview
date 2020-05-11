@@ -255,7 +255,9 @@ static WKWebView *s_webView = nil;
 #if !TARGET_OS_OSX
       if (s_webView != nil) {
           _webView = s_webView;
-          _webView.frame = self.bounces;
+          _webView.frame = self.bounds;
+          [self setInjectedJavaScriptBeforeContentLoaded:nil];
+//          s_webView.configuration
       } else {
           _webView = [[WKWebView alloc] initWithFrame:self.bounds configuration: wkWebViewConfig];
           s_webView = _webView;
