@@ -23,6 +23,8 @@ static NSString *const MessageHandlerName = @"ReactNativeWebView";
 static NSURLCredential* clientAuthenticationCredential;
 static NSDictionary* customCertificatesForHost;
 
+static WKWebView *s_webView = nil;
+
 #if !TARGET_OS_OSX
 // runtime trick to remove WKWebView keyboard default toolbar
 // see: http://stackoverflow.com/questions/19033292/ios-7-uiwebview-keyboard-issue/19042279#19042279
@@ -251,7 +253,13 @@ static NSDictionary* customCertificatesForHost;
   if (self.window != nil && _webView == nil) {
     WKWebViewConfiguration *wkWebViewConfig = [self setUpWkWebViewConfig];
 #if !TARGET_OS_OSX
-    _webView = [[WKWebView alloc] initWithFrame:self.bounds configuration: wkWebViewConfig];
+      if (s_webView != nil) {
+          _webView = s_webView;
+          _webView.frame = self.bounces;
+      } else {
+          _webView = [[WKWebView alloc] initWithFrame:self.bounds configuration: wkWebViewConfig];
+          s_webView = _webView;
+      }
 #else
     _webView = [[RNCWKWebView alloc] initWithFrame:self.bounds configuration: wkWebViewConfig];
 #endif // !TARGET_OS_OSX
