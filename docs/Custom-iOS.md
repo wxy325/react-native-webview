@@ -137,7 +137,7 @@ Once these are exposed, you can reference them in your custom web view class.
 If you open webpages that needs a Client Certificate for Authentication, you can create a credential and pass it to the webview:
 
 ```
-[RNCWebView setClientAuthenticationCredential:credential];
+[RNCCDWebView setClientAuthenticationCredential:credential];
 ```
 
 This can be paired with a call from Javascript to pass a string label for the certificate stored in keychain and use native calls to fetch the certificate to create a credential object. This call can be made anywhere that makes sense for your application (e.g. as part of the user authentication stack). The only requirement is to make this call before displaying any webviews.
@@ -163,7 +163,7 @@ If you need to connect to a server which has a self signed certificate, or want 
   
   [certMap setObject:(__bridge id _Nonnull)(certificate) forKey:@"example.com"];
 
-  [RNCWebView setCustomCertificatesForHost:certMap];
+  [RNCCDWebView setCustomCertificatesForHost:certMap];
 }
 
 ```

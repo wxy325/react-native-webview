@@ -27,18 +27,18 @@ import {
   NativeWebViewMacOS,
   ViewManager,
   State,
-  RNCWebViewUIManagerMacOS,
+  RNCCDWebViewUIManagerMacOS,
 } from './WebViewTypes';
 
 import styles from './WebView.styles';
 
-const UIManager = NotTypedUIManager as RNCWebViewUIManagerMacOS;
+const UIManager = NotTypedUIManager as RNCCDWebViewUIManagerMacOS;
 
 const { resolveAssetSource } = Image;
 
-const RNCWebViewManager = NativeModules.RNCWebViewManager as ViewManager;
+const RNCCDWebViewManager = NativeModules.RNCCDWebViewManager as ViewManager;
 
-const RNCWebView: typeof NativeWebViewMacOS = requireNativeComponent(
+const RNCCDWebView: typeof NativeWebViewMacOS = requireNativeComponent(
   'RNCCDWebView',
 );
 
@@ -63,7 +63,7 @@ class WebView extends React.Component<MacOSWebViewProps, State> {
   webViewRef = React.createRef<NativeWebViewMacOS>();
 
   // eslint-disable-next-line react/sort-comp
-  getCommands = () => UIManager.getViewManagerConfig('RNCWebView').Commands;
+  getCommands = () => UIManager.getViewManagerConfig('RNCCDWebView').Commands;
 
   /**
    * Go forward one page in the web view's history.
@@ -239,7 +239,7 @@ class WebView extends React.Component<MacOSWebViewProps, State> {
   ) => {
     const viewManager
       = (this.props.nativeConfig && this.props.nativeConfig.viewManager)
-      || RNCWebViewManager;
+      || RNCCDWebViewManager;
 
     viewManager.startLoadWithResult(!!shouldStart, lockIdentifier);
   };
@@ -295,7 +295,7 @@ class WebView extends React.Component<MacOSWebViewProps, State> {
       );
     } else if (this.state.viewState !== 'IDLE') {
       console.error(
-        `RNCWebView invalid state encountered: ${this.state.viewState}`,
+        `RNCCDWebView invalid state encountered: ${this.state.viewState}`,
       );
     }
 
@@ -311,7 +311,7 @@ class WebView extends React.Component<MacOSWebViewProps, State> {
 
     const NativeWebView
       = (nativeConfig.component as typeof NativeWebViewMacOS | undefined)
-      || RNCWebView;
+      || RNCCDWebView;
 
     const webView = (
       <NativeWebView

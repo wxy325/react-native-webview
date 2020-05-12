@@ -29,14 +29,14 @@ import {
   AndroidWebViewProps,
   NativeWebViewAndroid,
   State,
-  RNCWebViewUIManagerAndroid,
+  RNCCDWebViewUIManagerAndroid,
 } from './WebViewTypes';
 
 import styles from './WebView.styles';
 
-const UIManager = NotTypedUIManager as RNCWebViewUIManagerAndroid;
+const UIManager = NotTypedUIManager as RNCCDWebViewUIManagerAndroid;
 
-const RNCWebView = requireNativeComponent(
+const RNCCDWebView = requireNativeComponent(
   'RNCCDWebView',
 ) as typeof NativeWebViewAndroid;
 const { resolveAssetSource } = Image;
@@ -65,7 +65,7 @@ class WebView extends React.Component<AndroidWebViewProps, State> {
 
   static isFileUploadSupported = async () => {
     // native implementation should return "true" only for Android 5+
-    return NativeModules.RNCWebView.isFileUploadSupported();
+    return NativeModules.RNCCDWebView.isFileUploadSupported();
   };
 
   startUrl: string | null = null;
@@ -84,7 +84,7 @@ class WebView extends React.Component<AndroidWebViewProps, State> {
     BatchedBridge.registerCallableModule(this.messagingModuleName, this);
   };
 
-  getCommands = () => UIManager.getViewManagerConfig('RNCWebView').Commands;
+  getCommands = () => UIManager.getViewManagerConfig('RNCCDWebView').Commands;
 
   goForward = () => {
     UIManager.dispatchViewManagerCommand(
@@ -309,7 +309,7 @@ class WebView extends React.Component<AndroidWebViewProps, State> {
       );
     } else if (this.state.viewState !== 'IDLE') {
       console.error(
-        `RNCWebView invalid state encountered: ${this.state.viewState}`,
+        `RNCCDWebView invalid state encountered: ${this.state.viewState}`,
       );
     }
 
@@ -327,7 +327,7 @@ class WebView extends React.Component<AndroidWebViewProps, State> {
     }
 
     const NativeWebView
-      = (nativeConfig.component as typeof NativeWebViewAndroid) || RNCWebView;
+      = (nativeConfig.component as typeof NativeWebViewAndroid) || RNCCDWebView;
 
     const onShouldStartLoadWithRequest = createOnShouldStartLoadWithRequest(
       this.onShouldStartLoadWithRequestCallback,
