@@ -6,17 +6,17 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "RNCWKProcessPoolManager.h"
+#import "RNCCDWKProcessPoolManager.h"
 
-@interface RNCWKProcessPoolManager() {
+@interface RNCCDWKProcessPoolManager() {
     WKProcessPool *_sharedProcessPool;
 }
 @end
 
-@implementation RNCWKProcessPoolManager
+@implementation RNCCDWKProcessPoolManager
 
 + (id) sharedManager {
-    static RNCWKProcessPoolManager *_sharedManager = nil;
+    static RNCCDWKProcessPoolManager *_sharedManager = nil;
     @synchronized(self) {
         if(_sharedManager == nil) {
             _sharedManager = [[super alloc] init];

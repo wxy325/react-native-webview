@@ -51,7 +51,7 @@ const processDecelerationRate = (
 const RNCWebViewManager = NativeModules.RNCWebViewManager as ViewManager;
 
 const RNCWebView: typeof NativeWebViewIOS = requireNativeComponent(
-  'RNCWebView',
+  'RNCCDWebView',
 );
 
 class WebView extends React.Component<IOSWebViewProps, State> {

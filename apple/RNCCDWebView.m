@@ -5,10 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "RNCWebView.h"
+#import "RNCCDWebView.h"
 #import <React/RCTConvert.h>
 #import <React/RCTAutoInsetsProtocol.h>
-#import "RNCWKProcessPoolManager.h"
+#import "RNCCDWKProcessPoolManager.h"
 #if !TARGET_OS_OSX
 #import <UIKit/UIKit.h>
 #else
@@ -28,10 +28,10 @@ static WKWebView *s_webView = nil;
 #if !TARGET_OS_OSX
 // runtime trick to remove WKWebView keyboard default toolbar
 // see: http://stackoverflow.com/questions/19033292/ios-7-uiwebview-keyboard-issue/19042279#19042279
-@interface _SwizzleHelperWK : UIView
+@interface _CDSwizzleHelperWK : UIView
 @property (nonatomic, copy) WKWebView *webView;
 @end
-@implementation _SwizzleHelperWK
+@implementation _CDSwizzleHelperWK
 -(id)inputAccessoryView
 {
     if (_webView == nil) {
@@ -49,12 +49,12 @@ static WKWebView *s_webView = nil;
 #endif // !TARGET_OS_OSX
 
 #if TARGET_OS_OSX
-@interface RNCWKWebView : WKWebView
+@interface RNCCDWKWebView : WKWebView
 @end
-@implementation RNCWKWebView
+@implementation RNCCDWKWebView
 - (void)scrollWheel:(NSEvent *)theEvent {
-  RNCWebView *rncWebView = (RNCWebView *)[self superview];
-  RCTAssert([rncWebView isKindOfClass:[rncWebView class]], @"superview must be an RNCWebView");
+  RNCCDWebView *rncWebView = (RNCCDWebView *)[self superview];
+  RCTAssert([rncWebView isKindOfClass:[rncWebView class]], @"superview must be an RNCCDWebView");
   if (![rncWebView scrollEnabled]) {
     [[self nextResponder] scrollWheel:theEvent];
     return;
@@ -64,7 +64,7 @@ static WKWebView *s_webView = nil;
 @end
 #endif // TARGET_OS_OSX
 
-@interface RNCWebView () <WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler,
+@interface RNCCDWebView () <WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler,
 #if !TARGET_OS_OSX
     UIScrollViewDelegate,
 #endif // !TARGET_OS_OSX
@@ -83,14 +83,14 @@ static WKWebView *s_webView = nil;
 #if !TARGET_OS_OSX
 @property (nonatomic, copy) WKWebView *webView;
 #else
-@property (nonatomic, copy) RNCWKWebView *webView;
+@property (nonatomic, copy) RNCCDWKWebView *webView;
 #endif // !TARGET_OS_OSX
 @property (nonatomic, strong) WKUserScript *postMessageScript;
 @property (nonatomic, strong) WKUserScript *atStartScript;
 @property (nonatomic, strong) WKUserScript *atEndScript;
 @end
 
-@implementation RNCWebView
+@implementation RNCCDWebView
 {
 #if !TARGET_OS_OSX
   UIColor * _savedBackgroundColor;
@@ -220,12 +220,12 @@ static WKWebView *s_webView = nil;
     wkWebViewConfig.websiteDataStore = [WKWebsiteDataStore defaultDataStore];
   }
   if(self.useSharedProcessPool) {
-    wkWebViewConfig.processPool = [[RNCWKProcessPoolManager sharedManager] sharedProcessPool];
+    wkWebViewConfig.processPool = [[RNCCDWKProcessPoolManager sharedManager] sharedProcessPool];
   }
   wkWebViewConfig.userContentController = [WKUserContentController new];
 
   // Shim the HTML5 history API:
-  [wkWebViewConfig.userContentController addScriptMessageHandler:[[RNCWeakScriptMessageDelegate alloc] initWithDelegate:self]
+  [wkWebViewConfig.userContentController addScriptMessageHandler:[[RNCCDWeakScriptMessageDelegate alloc] initWithDelegate:self]
                                                             name:HistoryShimName];
   [self resetupScripts:wkWebViewConfig];
 
@@ -263,7 +263,7 @@ static WKWebView *s_webView = nil;
           s_webView = _webView;
       }
 #else
-    _webView = [[RNCWKWebView alloc] initWithFrame:self.bounds configuration: wkWebViewConfig];
+    _webView = [[RNCCDWKWebView alloc] initWithFrame:self.bounds configuration: wkWebViewConfig];
 #endif // !TARGET_OS_OSX
 
     [self setBackgroundColor: _savedBackgroundColor];
@@ -613,7 +613,7 @@ static WKWebView *s_webView = nil;
 
     if(subview == nil) return;
 
-    NSString* name = [NSString stringWithFormat:@"%@_SwizzleHelperWK", subview.class.superclass];
+    NSString* name = [NSString stringWithFormat:@"%@_CDSwizzleHelperWK", subview.class.superclass];
     Class newClass = NSClassFromString(name);
 
     if(newClass == nil)
@@ -621,7 +621,7 @@ static WKWebView *s_webView = nil;
         newClass = objc_allocateClassPair(subview.class, [name cStringUsingEncoding:NSASCIIStringEncoding], 0);
         if(!newClass) return;
 
-        Method method = class_getInstanceMethod([_SwizzleHelperWK class], @selector(inputAccessoryView));
+        Method method = class_getInstanceMethod([_CDSwizzleHelperWK class], @selector(inputAccessoryView));
         class_addMethod(newClass, @selector(inputAccessoryView), method_getImplementation(method), method_getTypeEncoding(method));
 
         objc_registerClassPair(newClass);
@@ -712,7 +712,7 @@ static WKWebView *s_webView = nil;
 {
   [super layoutSubviews];
 
-  // Ensure webview takes the position and dimensions of RNCWebView
+  // Ensure webview takes the position and dimensions of RNCCDWebView
   _webView.frame = self.bounds;
 #if !TARGET_OS_OSX
   _webView.scrollView.contentInset = _contentInset;
@@ -1316,7 +1316,7 @@ static WKWebView *s_webView = nil;
   
   if(_messagingEnabled){
     if (self.postMessageScript){
-      [wkWebViewConfig.userContentController addScriptMessageHandler:[[RNCWeakScriptMessageDelegate alloc] initWithDelegate:self]
+      [wkWebViewConfig.userContentController addScriptMessageHandler:[[RNCCDWeakScriptMessageDelegate alloc] initWithDelegate:self]
                                                                        name:MessageHandlerName];
       [wkWebViewConfig.userContentController addUserScript:self.postMessageScript];
     }
@@ -1352,7 +1352,7 @@ static WKWebView *s_webView = nil;
 
 @end
 
-@implementation RNCWeakScriptMessageDelegate
+@implementation RNCCDWeakScriptMessageDelegate
 
 - (instancetype)initWithDelegate:(id<WKScriptMessageHandler>)scriptDelegate {
     self = [super init];

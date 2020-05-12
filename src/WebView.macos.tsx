@@ -39,7 +39,7 @@ const { resolveAssetSource } = Image;
 const RNCWebViewManager = NativeModules.RNCWebViewManager as ViewManager;
 
 const RNCWebView: typeof NativeWebViewMacOS = requireNativeComponent(
-  'RNCWebView',
+  'RNCCDWebView',
 );
 
 class WebView extends React.Component<MacOSWebViewProps, State> {

@@ -75,7 +75,7 @@ For more, read the [API Reference](./docs/Reference.md) and [Guide](./docs/Guide
 
 ## Common issues
 
-- If you're getting `Invariant Violation: Native component for "RNCWebView does not exist"` it likely means you forgot to run `react-native link` or there was some error with the linking process
+- If you're getting `Invariant Violation: Native component for "RNCCDWebView does not exist"` it likely means you forgot to run `react-native link` or there was some error with the linking process
 
 ## Contributing
 
