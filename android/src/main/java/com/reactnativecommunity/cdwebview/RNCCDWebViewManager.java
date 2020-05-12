@@ -1,4 +1,4 @@
-package com.reactnativecommunity.webview;
+package com.reactnativecommunity.cdwebview;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -60,13 +60,13 @@ import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.uimanager.events.ContentSizeChangeEvent;
 import com.facebook.react.uimanager.events.Event;
 import com.facebook.react.uimanager.events.EventDispatcher;
-import com.reactnativecommunity.webview.events.TopLoadingErrorEvent;
-import com.reactnativecommunity.webview.events.TopHttpErrorEvent;
-import com.reactnativecommunity.webview.events.TopLoadingFinishEvent;
-import com.reactnativecommunity.webview.events.TopLoadingProgressEvent;
-import com.reactnativecommunity.webview.events.TopLoadingStartEvent;
-import com.reactnativecommunity.webview.events.TopMessageEvent;
-import com.reactnativecommunity.webview.events.TopShouldStartLoadWithRequestEvent;
+import com.reactnativecommunity.cdwebview.events.TopLoadingErrorEvent;
+import com.reactnativecommunity.cdwebview.events.TopHttpErrorEvent;
+import com.reactnativecommunity.cdwebview.events.TopLoadingFinishEvent;
+import com.reactnativecommunity.cdwebview.events.TopLoadingProgressEvent;
+import com.reactnativecommunity.cdwebview.events.TopLoadingStartEvent;
+import com.reactnativecommunity.cdwebview.events.TopMessageEvent;
+import com.reactnativecommunity.cdwebview.events.TopShouldStartLoadWithRequestEvent;
 
 import org.json.JSONException;
 import org.json.JSONObject;

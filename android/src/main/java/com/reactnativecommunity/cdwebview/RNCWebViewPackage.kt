@@ -1,4 +1,4 @@
-package com.reactnativecommunity.webview
+package com.reactnativecommunity.cdwebview
 
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.ReactApplicationContext
