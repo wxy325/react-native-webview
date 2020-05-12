@@ -24,6 +24,7 @@ static NSURLCredential* clientAuthenticationCredential;
 static NSDictionary* customCertificatesForHost;
 
 static WKWebView *s_webView = nil;
+static RNCCDWebView *s_rnccdWebview = nil;
 
 #if !TARGET_OS_OSX
 // runtime trick to remove WKWebView keyboard default toolbar
@@ -111,6 +112,41 @@ static WKWebView *s_webView = nil;
 #if defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && __IPHONE_OS_VERSION_MAX_ALLOWED >= 110000 /* __IPHONE_11_0 */
   UIScrollViewContentInsetAdjustmentBehavior _savedContentInsetAdjustmentBehavior;
 #endif
+}
+
+
+- (BOOL)isWarmupWebViewConfigCompatible {
+    BOOL f = _javaScriptEnabled && !_allowFileAccessFromFileURLs && !_incognito && _cacheEnabled && self.useSharedProcessPool && !_allowsInlineMediaPlayback && !_mediaPlaybackRequiresUserAction && !_applicationNameForUserAgent && _sharedCookiesEnabled && _messagingEnabled;
+    #if WEBKIT_IOS_10_APIS_AVAILABLE
+    f = f && _dataDetectorTypes == UIDataDetectorTypeAll;
+    #endif
+    return f;
+}
+
++ (void)warmupWkWebView {
+    RNCCDWebView* wv = [[RNCCDWebView alloc] init];
+    wv.javaScriptEnabled = YES;
+    wv.allowFileAccessFromFileURLs = NO;
+    wv.incognito = NO;
+    wv.cacheEnabled = YES;
+    wv.useSharedProcessPool = YES;
+    wv.allowsInlineMediaPlayback = NO;
+    wv.mediaPlaybackRequiresUserAction = YES;
+    wv.sharedCookiesEnabled = YES;
+    wv.messagingEnabled = YES;
+    #if WEBKIT_IOS_10_APIS_AVAILABLE
+    wv.dataDetectorTypes = UIDataDetectorTypeAll;
+    #endif
+    [wv warmUp];
+    s_rnccdWebview = wv;
+}
+
+- (void)warmUp {
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        WKWebViewConfiguration *wkWebViewConfig = [self setUpWkWebViewConfig];
+        _webView = [[WKWebView alloc] initWithFrame:self.bounds configuration: wkWebViewConfig];
+        s_webView = _webView;
+    });
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -253,14 +289,12 @@ static WKWebView *s_webView = nil;
   if (self.window != nil && _webView == nil) {
     WKWebViewConfiguration *wkWebViewConfig = [self setUpWkWebViewConfig];
 #if !TARGET_OS_OSX
-      if (s_webView != nil) {
+      if ([self isWarmupWebViewConfigCompatible] && s_webView != nil) {
           _webView = s_webView;
           _webView.frame = self.bounds;
           [self setInjectedJavaScriptBeforeContentLoaded:nil];
-//          s_webView.configuration
       } else {
           _webView = [[WKWebView alloc] initWithFrame:self.bounds configuration: wkWebViewConfig];
-          s_webView = _webView;
       }
 #else
     _webView = [[RNCCDWKWebView alloc] initWithFrame:self.bounds configuration: wkWebViewConfig];

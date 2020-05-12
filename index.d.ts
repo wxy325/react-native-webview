@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import {NativeModules} from 'react-native'
 // eslint-disable-next-line
 import { IOSWebViewProps, AndroidWebViewProps } from './lib/WebViewTypes';
 
@@ -42,6 +43,12 @@ declare class WebView extends Component<WebViewProps> {
      */
     requestFocus: () => void;
 }
+const warmupWkWebview = () => {
+    const vm = NativeModules.RNCCDWebViewManager as ViewManager;
+    if (vm.warmupWkWebView) {
+      vm.warmupWkWebView();
+    }
+}
 
-export {WebView};
+export {WebView, warmupWkWebview};
 export default WebView;
