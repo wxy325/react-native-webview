@@ -45,7 +45,7 @@ declare class WebView extends Component<WebViewProps> {
 }
 const warmupWkWebview = () => {
     const vm = NativeModules.RNCCDWebViewManager as ViewManager;
-    if (vm.warmupWkWebView) {
+    if (vm && vm.warmupWkWebView) {
       vm.warmupWkWebView();
     }
 }
