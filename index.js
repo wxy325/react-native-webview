@@ -3,7 +3,7 @@ import WebView from './lib/WebView';
 
 const warmupWkWebview = () => {
     const vm = NativeModules.RNCCDWebViewManager;
-    if (vm.warmupWkWebView) {
+    if (vm && vm.warmupWkWebView) {
       vm.warmupWkWebView();
     }
 }
